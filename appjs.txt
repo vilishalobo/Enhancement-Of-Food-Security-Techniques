@@ -1,0 +1,170 @@
+import React, { useState } from "react";
+import { ethers } from "ethers";
+import { CONTRACT_ABI } from "./contractABI";
+import contractData from "./contractAddress.json";
+
+const ShipmentApp = () => {
+  const [shipmentId, setShipmentId] = useState("");
+  const [shipmentDetails, setShipmentDetails] = useState(null);
+  const [receiverAddress, setReceiverAddress] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
+
+  async function connectToContract() {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    return new ethers.Contract(contractData.contractAddress, CONTRACT_ABI, signer);
+  }
+
+  async function fetchShipment() {
+    try {
+      setStatusMessage("Fetching shipment details...");
+      const shipmentContract = await connectToContract();
+      const details = await shipmentContract.getShipment(Number(shipmentId)); // Ensure ID is a number
+
+      setShipmentDetails({
+        sender: details.sender,
+        receiver: details.receiver,
+        status: getStatusText(Number(details.status)), // Convert status to number
+        createdAt: new Date(Number(details.createdAt) * 1000).toString(),
+      });
+
+      setStatusMessage("Shipment details fetched successfully!");
+    } catch (error) {
+      console.error("Error fetching shipment details:", error);
+      setStatusMessage("Failed to fetch shipment details.");
+    }
+  }
+
+  async function createShipment() {
+    try {
+      if (!receiverAddress) {
+        setStatusMessage("Receiver address is required.");
+        return;
+      }
+      setStatusMessage("Creating shipment...");
+      
+      const shipmentContract = await connectToContract();
+      const tx = await shipmentContract.createShipment(receiverAddress);
+      await tx.wait();
+  
+      // 🔥 Fetch the latest shipment ID directly from the contract
+      const latestShipmentId = await shipmentContract.shipmentCount();
+  
+      setShipmentId(latestShipmentId.toString());
+      setStatusMessage(`Shipment created successfully! ID: ${latestShipmentId}`);
+      console.log("New Shipment ID:", latestShipmentId);
+    } catch (error) {
+      console.error("Error creating shipment:", error);
+      setStatusMessage("Failed to create shipment.");
+    }
+  }
+  
+   
+
+  async function startShipment() {
+    try {
+      if (!shipmentId) {
+        setStatusMessage("Shipment ID is required.");
+        return;
+      }
+      setStatusMessage("Starting shipment...");
+      const shipmentContract = await connectToContract();
+      const tx = await shipmentContract.startShipment(Number(shipmentId));
+      await tx.wait();
+      setStatusMessage("Shipment started successfully!");
+      await fetchShipment(); // Refresh details
+    } catch (error) {
+      console.error("Error starting shipment:", error);
+      setStatusMessage("Failed to start shipment.");
+    }
+  }
+
+  async function completeShipment() {
+    try {
+      if (!shipmentId) {
+        setStatusMessage("Shipment ID is required.");
+        return;
+      }
+      setStatusMessage("Completing shipment...");
+      const shipmentContract = await connectToContract();
+      const tx = await shipmentContract.completeShipment(Number(shipmentId));
+      await tx.wait();
+      setStatusMessage("Shipment completed successfully!");
+      await fetchShipment(); // Refresh details
+    } catch (error) {
+      console.error("Error completing shipment:", error);
+      setStatusMessage("Failed to complete shipment.");
+    }
+  }
+
+  function getStatusText(status) {
+    switch (status) {
+      case 0:
+        return "Pending";
+      case 1:
+        return "In Progress";
+      case 2:
+        return "Delivered";
+      default:
+        return "Unknown";
+    }
+  }
+
+  return (
+    <div>
+      <h1>Shipment Management</h1>
+      
+      {/* Create Shipment Section */}
+      <div>
+        <h2>Create Shipment</h2>
+        <input
+          type="text"
+          placeholder="Receiver Address"
+          value={receiverAddress}
+          onChange={(e) => setReceiverAddress(e.target.value)}
+        />
+        <button onClick={createShipment}>Create Shipment</button>
+      </div>
+
+      {/* Fetch Shipment Details Section */}
+      <div>
+        <h2>Fetch Shipment</h2>
+        <input
+          type="number"
+          placeholder="Enter Shipment ID"
+          value={shipmentId}
+          onChange={(e) => setShipmentId(e.target.value)}
+        />
+        <button onClick={fetchShipment}>Fetch Shipment</button>
+      </div>
+
+      {shipmentDetails && (
+        <div>
+          <h3>Shipment Details</h3>
+          <p>Sender: {shipmentDetails.sender}</p>
+          <p>Receiver: {shipmentDetails.receiver}</p>
+          <p>Status: {shipmentDetails.status}</p>
+          <p>Created At: {shipmentDetails.createdAt}</p>
+        </div>
+      )}
+
+      {/* Manage Shipment Section */}
+      <div>
+        <h2>Manage Shipment</h2>
+        <input
+          type="number"
+          placeholder="Enter Shipment ID"
+          value={shipmentId}
+          onChange={(e) => setShipmentId(e.target.value)}
+        />
+        <button onClick={startShipment}>Start Shipment</button>
+        <button onClick={completeShipment}>Complete Shipment</button>
+      </div>
+
+      {/* Status Message */}
+      {statusMessage && <p>{statusMessage}</p>}
+    </div>
+  );
+};
+
+export default ShipmentApp;

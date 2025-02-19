@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract SupplyChain {
+    enum ShipmentStatus { Pending, InProgress, Delivered }
+
+    struct ShipmentDetails {
+        uint256 shipmentId;
+        address sender;
+        address receiver;
+        ShipmentStatus status;
+        uint256 createdAt;
+        uint256 startedAt;
+        uint256 completedAt;
+    }
+
+    mapping(uint256 => ShipmentDetails) public shipments;
+    uint256 public shipmentCount;
+
+    event ShipmentStatusChanged(
+        uint256 indexed shipmentId,
+        address indexed sender,
+        address indexed receiver,
+        ShipmentStatus status,
+        uint256 timestamp
+    );
+
+    // Function to create a new shipment
+    function createShipment(address _receiver) external {
+        shipmentCount++;
+        shipments[shipmentCount] = ShipmentDetails({
+            shipmentId: shipmentCount,
+            sender: msg.sender,
+            receiver: _receiver,
+            status: ShipmentStatus.Pending,
+            createdAt: block.timestamp,
+            startedAt: 0,
+            completedAt: 0
+        });
+
+        emit ShipmentStatusChanged(shipmentCount, msg.sender, _receiver, ShipmentStatus.Pending, block.timestamp);
+    }
+
+    // Function to get shipment details
+    function getShipment(uint256 _shipmentId) external view returns (ShipmentDetails memory) {
+        return shipments[_shipmentId];
+    }
+
+    // Function to start the shipment (change status to "In Progress")
+    function startShipment(uint256 _shipmentId) external {
+        ShipmentDetails storage shipment = shipments[_shipmentId];
+        require(msg.sender == shipment.sender, "Only the sender can start the shipment.");
+        require(shipment.status == ShipmentStatus.Pending, "Shipment is not in a Pending state.");
+
+        shipment.status = ShipmentStatus.InProgress;
+        shipment.startedAt = block.timestamp;
+
+        emit ShipmentStatusChanged(_shipmentId, shipment.sender, shipment.receiver, ShipmentStatus.InProgress, block.timestamp);
+    }
+
+    function completeShipment(uint256 _shipmentId) external {
+    ShipmentDetails storage shipment = shipments[_shipmentId];
+    require(msg.sender == shipment.receiver, "Only the receiver can complete the shipment.");
+    require(shipment.status == ShipmentStatus.InProgress, "Shipment must be in progress to complete.");
+
+    shipment.status = ShipmentStatus.Delivered;
+    shipment.completedAt = block.timestamp;
+
+    emit ShipmentStatusChanged(_shipmentId, shipment.sender, shipment.receiver, ShipmentStatus.Delivered, block.timestamp);
+}
+}
