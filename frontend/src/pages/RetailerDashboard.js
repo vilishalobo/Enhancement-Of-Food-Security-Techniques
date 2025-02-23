@@ -15,11 +15,9 @@ const RetailerDashboard = () => {
     }
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      provider.resolveName = async (name) => name;
       await provider.send("eth_requestAccounts", []);
       const signer = await provider.getSigner();
-      const contractAddress = contractData.contractAddress;
-      return new ethers.Contract(contractAddress, SupplyChainABI, signer);
+      return new ethers.Contract(contractData.contractAddress, SupplyChainABI, signer);
     } catch (error) {
       console.error("Error connecting to contract:", error);
       setStatusMessage("Failed to connect to contract.");
@@ -28,10 +26,26 @@ const RetailerDashboard = () => {
   }
 
   async function fetchShipment() {
+    if (!shipmentId) {
+      setStatusMessage("Enter shipment ID.");
+      return;
+    }
+
+    setStatusMessage("Fetching shipment details...");
+    const shipmentContract = await connectToContract();
+    if (!shipmentContract) return;
+
     try {
-      setStatusMessage("Fetching shipment details...");
-      const shipmentContract = await connectToContract();
       const details = await shipmentContract.getShipment(Number(shipmentId));
+      const products = await shipmentContract.getProducts(Number(shipmentId));
+
+      const formattedProducts = products.map((product) => ({
+        name: product.name,
+        manufacturingDate: new Date(Number(product.manufacturingDate) * 1000).toDateString(),
+        expiryDate: new Date(Number(product.expiryDate) * 1000).toDateString(),
+        price: ethers.formatUnits(product.price, "ether"),
+        quantity: Number(product.quantity),
+      }));
 
       setShipmentDetails({
         sender: details.sender,
@@ -40,6 +54,7 @@ const RetailerDashboard = () => {
         createdAt: new Date(Number(details.createdAt) * 1000).toString(),
         startedAt: details.startedAt > 0 ? new Date(Number(details.startedAt) * 1000).toString() : "Not started",
         completedAt: details.completedAt > 0 ? new Date(Number(details.completedAt) * 1000).toString() : "Not completed",
+        products: formattedProducts,
       });
 
       setStatusMessage("Shipment details fetched successfully!");
@@ -50,13 +65,16 @@ const RetailerDashboard = () => {
   }
 
   async function completeShipment() {
+    if (!shipmentId) {
+      setStatusMessage("Shipment ID is required.");
+      return;
+    }
+
+    setStatusMessage("Completing shipment...");
+    const shipmentContract = await connectToContract();
+    if (!shipmentContract) return;
+
     try {
-      if (!shipmentId) {
-        setStatusMessage("Shipment ID is required.");
-        return;
-      }
-      setStatusMessage("Completing shipment...");
-      const shipmentContract = await connectToContract();
       const tx = await shipmentContract.completeShipment(Number(shipmentId));
       await tx.wait();
       setStatusMessage("Shipment completed successfully!");
@@ -68,53 +86,55 @@ const RetailerDashboard = () => {
   }
 
   function getStatusText(status) {
-    switch (status) {
-      case 0:
-        return "Pending";
-      case 1:
-        return "In Progress";
-      case 2:
-        return "Delivered";
-      default:
-        return "Unknown";
-    }
+    return ["Pending", "In Progress", "Delivered"][status] || "Unknown";
   }
 
   return (
     <div>
-        <h2>Fetch Shipment</h2>
-        <input
-          type="number"
-          placeholder="Enter Shipment ID"
-          value={shipmentId}
-          onChange={(e) => setShipmentId(e.target.value)}
-        />
-        <button onClick={fetchShipment}>Fetch Shipment</button>
+      <h2>Fetch Shipment</h2>
+      <input
+        type="number"
+        placeholder="Shipment ID"
+        value={shipmentId}
+        onChange={(e) => setShipmentId(e.target.value)}
+      />
+      <button onClick={fetchShipment}>Fetch Shipment</button>
+      <button onClick={completeShipment}>Complete Shipment</button>
+
+      {statusMessage && <p>{statusMessage}</p>}
+
       {shipmentDetails && (
         <div>
           <h3>Shipment Details</h3>
-          <p>Sender: {shipmentDetails.sender}</p>
-          <p>Receiver: {shipmentDetails.receiver}</p>
-          <p>Status: {shipmentDetails.status}</p>
-          <p>Created At: {shipmentDetails.createdAt}</p>
-          <p>Started At: {shipmentDetails.startedAt}</p>
-          <p>Completed At: {shipmentDetails.completedAt}</p>
+          <p><strong>Sender:</strong> {shipmentDetails.sender}</p>
+          <p><strong>Receiver:</strong> {shipmentDetails.receiver}</p>
+          <p><strong>Status:</strong> {shipmentDetails.status}</p>
+          <p><strong>Created At:</strong> {shipmentDetails.createdAt}</p>
+          <p><strong>Started At:</strong> {shipmentDetails.startedAt}</p>
+          <p><strong>Completed At:</strong> {shipmentDetails.completedAt}</p>
+
+          {shipmentDetails.products.length > 0 ? (
+            <div>
+              <h3>Products in Shipment</h3>
+              <ul>
+                {shipmentDetails.products.map((product, index) => (
+                  <li key={index}>
+                    <p><strong>Name:</strong> {product.name}</p>
+                    <p><strong>Manufacturing Date:</strong> {product.manufacturingDate}</p>
+                    <p><strong>Expiry Date:</strong> {product.expiryDate}</p>
+                    <p><strong>Price:</strong> {product.price} ETH</p>
+                    <p><strong>Quantity:</strong> {product.quantity}</p>
+                    <hr />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p>No products added to this shipment.</p>
+          )}
         </div>
       )}
-
-      <div>
-        <h2>Manage Shipment</h2>
-        <input
-          type="number"
-          placeholder="Enter Shipment ID"
-          value={shipmentId}
-          onChange={(e) => setShipmentId(e.target.value)}
-        />
-        <button onClick={completeShipment}>Complete Shipment</button>
-      </div>
-      {statusMessage && <p>{statusMessage}</p>}
     </div>
-
   );
 };
 
