@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getBlockchain } from "./blockchain"; // Assuming you have a method to get the blockchain data
+import { getBlockchain } from "../blockchain"; // Assuming you have a method to get the blockchain data
 
 const Register = ({ setUserRole }) => {
     const [isSignup, setIsSignup] = useState(false);
     const [role, setRole] = useState("Industry");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [address, setAddress] = useState("");
     const navigate = useNavigate();
+    const [account, setAccount] = useState("");
 
-    // Fetch blockchain account (MetaMask address)
     useEffect(() => {
         const loadBlockchain = async () => {
             const blockchain = await getBlockchain();
             if (blockchain) {
-                setAddress(blockchain.account);
+                setAccount(blockchain.account);
+
+                window.ethereum.on("accountsChanged", (accounts) => {
+                    setAccount(accounts[0] || "Disconnected");
+                });
             }
         };
         loadBlockchain();
@@ -25,31 +28,26 @@ const Register = ({ setUserRole }) => {
         const users = JSON.parse(localStorage.getItem("users")) || {};
 
         if (isSignup) {
-            // **Check if Ethereum address is already used for a different role**
-            const addressExists = Object.values(users).some(user => user.address === address && user.role !== role);
+            const addressExists = Object.values(users).some(user => user.address === account && user.role !== role);
 
             if (addressExists) {
                 alert(`This Ethereum address is already registered under a different role!`);
                 return;
             }
 
-            // **Check if username already exists**
             if (users[username]) {
                 alert("Username already exists. Please log in.");
                 return;
             }
 
-            // **Store username, password, role, and unique Ethereum address**
-            users[username] = { password, role, address };
+            users[username] = { password, role, address: account };
             localStorage.setItem("users", JSON.stringify(users));
 
             alert("Account created successfully! Please log in.");
             setIsSignup(false);
         } else {
-            // **Login validation**
             if (users[username] && users[username].password === password) {
-                // **Ensure Ethereum address matches the stored one for the user**
-                if (users[username].address !== address) {
+                if (users[username].address !== account) {
                     alert("Ethereum address does not match the registered address for this account.");
                     return;
                 }
@@ -57,7 +55,6 @@ const Register = ({ setUserRole }) => {
                 setUserRole(users[username].role);
                 localStorage.setItem("userRole", users[username].role);
 
-                // Redirect based on role
                 if (users[username].role === "Industry") {
                     navigate("/industry-dashboard");
                 } else if (users[username].role === "Retailer") {
@@ -73,6 +70,8 @@ const Register = ({ setUserRole }) => {
 
     return (
         <div>
+            <p>Connected Account: {account || "Not Connected"}</p>
+
             <h2>{isSignup ? "Sign Up" : "Login"}</h2>
             <label>Username:</label>
             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
@@ -88,14 +87,9 @@ const Register = ({ setUserRole }) => {
                         <option value="Retailer">Retailer</option>
                         <option value="Customer">Customer</option>
                     </select>
-                </>
-            )}
 
-            {/* Display Ethereum Address for Sign Up */}
-            {isSignup && address && (
-                <>
                     <label>Ethereum Address:</label>
-                    <input type="text" value={address} disabled />
+                    <input type="text" value={account} disabled />
                 </>
             )}
 
