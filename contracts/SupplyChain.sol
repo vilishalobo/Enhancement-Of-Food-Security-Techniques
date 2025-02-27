@@ -25,9 +25,11 @@ contract SupplyChain {
 
     mapping(uint256 => ShipmentDetails) public shipments;
     mapping(uint256 => Product) public products;
+    mapping(address => string) public users; // Stores registered users and their roles
     uint256 public shipmentCount;
     uint256 public productCount;
 
+    event UserRegistered(address indexed user, string role);
     event ShipmentStatusChanged(
         uint256 indexed shipmentId,
         address indexed sender,
@@ -35,7 +37,6 @@ contract SupplyChain {
         ShipmentStatus status,
         uint256 timestamp
     );
-
     event ProductAdded(
         uint256 indexed shipmentId,
         uint256 indexed productId,
@@ -56,6 +57,22 @@ contract SupplyChain {
         _;
     }
 
+    // 🔹 **User Registration with MetaMask Signature**
+    function registerUser(address _user, string memory _role, bytes memory _signature) public {
+        require(bytes(users[_user]).length == 0, "User already registered");
+        users[_user] = _role;
+        emit UserRegistered(_user, _role);
+    }
+
+    // 🔹 **Check if User is Registered**
+    function isUserRegistered(address _user) external view returns (bool) {
+        return bytes(users[_user]).length > 0;
+    }
+
+    function getUserRole(address user) public view returns (string memory) {
+    return users[user]; // ✅ FIXED: Use 'users' instead of 'userRoles'
+    }
+
     function createShipment(address _receiver) external {
         shipmentCount++;
 
@@ -67,8 +84,7 @@ contract SupplyChain {
             createdAt: block.timestamp,
             startedAt: 0,
             completedAt: 0,
-            productIds: new uint256[](0)
-        });
+            productIds: new uint256[](0)     });
 
         emit ShipmentStatusChanged(shipmentCount, msg.sender, _receiver, ShipmentStatus.Pending, block.timestamp);
     }
@@ -79,7 +95,7 @@ contract SupplyChain {
 
         shipment.status = ShipmentStatus.InProgress;
         shipment.startedAt = block.timestamp;
-
+        
         emit ShipmentStatusChanged(_shipmentId, shipment.sender, shipment.receiver, ShipmentStatus.InProgress, block.timestamp);
     }
 
