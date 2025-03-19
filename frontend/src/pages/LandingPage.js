@@ -1,26 +1,21 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+    const navigate = useNavigate();
 
-    const navigate= useNavigate();
+    return (
+        <div>
+            <h1 style={{ color: "Black" }}>Are you an Industry/Retailer/Customer?</h1>
+            <button onClick={() => navigate("/register-blockchain")}>Get Started</button>
 
-  return (
-    <div>
-    <h1>
-        Are you a Industry/Retailer/Customer?
-        <button 
-            onClick={()=>navigate("/register-blockchain")}> 
-            Get Start 
-        </button> 
-         
-        Are you a farmer?
-        <button>
-            Get Started
-        </button>
-    </h1>
-    </div>
-  )
-}
+            <h1 style={{ color: "Black" }}>Are you a Farmer?</h1>
+            <button onClick={() => navigate("/login")}>Get Started</button>  
 
-export default LandingPage
+            <h4>Admin?</h4>
+            <button onClick={() => navigate("/admin-dashboard")}>Get Started</button>  
+        </div>
+    );
+};
+
+export default LandingPage;

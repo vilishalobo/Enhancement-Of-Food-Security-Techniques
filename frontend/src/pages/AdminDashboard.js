@@ -1,0 +1,114 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+
+function AdminDashboard() {
+  const [requests, setRequests] = useState([]);
+  const [quantities, setQuantities] = useState({});
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // ✅ Initialize navigate function
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/pending-requests");
+        console.log("Fetched Requests:", response.data);
+        setRequests(response.data);
+      } catch (error) {
+        console.error("❌ Error fetching requests:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRequests();
+  }, []);
+
+  const handleQuantityChange = (requestId, value) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [requestId]: value,
+    }));
+  };
+
+  async function approveRequest(requestId) {
+    const quantity = quantities[requestId];
+    if (!quantity) {
+      alert("❌ Please enter a quantity before approving!");
+      return;
+    }
+
+    try {
+      await axios.post("http://localhost:5000/approve-request", { requestId, quantity });
+      alert("✅ Request approved!");
+      setRequests(requests.filter(req => req._id !== requestId));
+    } catch (error) {
+      console.error("❌ Error approving request:", error);
+    }
+  }
+
+  return (
+    
+    <div style={{ padding: "10px" }}>
+      <h1 style={{ color: "Black" }}>Admin Dashboard</h1>
+      <h3>Pending Requests</h3>
+
+      {loading ? (
+        <p>Loading requests...</p>
+      ) : requests.length > 0 ? (
+        <table border="1" cellPadding="10">
+          <thead>
+            <tr>
+              <th>Farmer Username</th>
+              <th>Fruit Type</th>
+              <th>Land Area (acres)</th>
+              <th>Quantity (Kgs)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {requests.map((req) => (
+              <tr key={req._id}>
+                <td>{req.username}</td>
+                <td>{req.fruitType}</td>
+                <td>{req.landArea ? `${req.landArea} acres` : "N/A"}</td>
+                <td>
+                  <input
+                    type="number"
+                    placeholder="Enter quantity"
+                    value={quantities[req._id] || ""}
+                    onChange={(e) => handleQuantityChange(req._id, e.target.value)}
+                  />
+                </td>
+                <td>
+                  <button onClick={() => approveRequest(req._id)}>Approve</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No pending requests</p>
+      )}
+
+      {/* ✅ Button to go to Prediction page */}
+      <button 
+        onClick={() => navigate("/prediction")} // ✅ Redirect to Prediction.js
+        style={{
+          marginTop: "20px",
+          padding: "10px",
+          backgroundColor: "#007BFF",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+          fontSize: "16px",
+          borderRadius: "5px"
+        }}
+      >
+        Go to Prediction Page
+      </button>
+    </div>
+  );
+}
+
+export default AdminDashboard;
