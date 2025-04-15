@@ -53,7 +53,10 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 */
 
+
 require("dotenv").config();
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -101,8 +104,10 @@ const Request = mongoose.model("Request", requestSchema);
 // ✅ Blockchain Setup
 const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545"); // Hardhat local node
 const contractABI = require("./SupplyChainABI.json"); 
-const contractAddress = process.env.CONTRACT_ADDRESS; // Ensure it's defined in .env
+const deployedAddressPath = path.join(__dirname, "deployedAddress.json");
+const { contractAddress } = JSON.parse(fs.readFileSync(deployedAddressPath, "utf-8"));
 const signer = provider.getSigner(0);
+console.log("Contract address:", contractAddress);
 const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
 // ✅ Authentication Routes
