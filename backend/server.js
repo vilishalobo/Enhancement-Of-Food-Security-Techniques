@@ -1,57 +1,57 @@
-/* require("dotenv").config();
-const express = require("express");
-const { ethers } = require("ethers");
+// require("dotenv").config();
+// const express = require("express");
+// const { ethers } = require("ethers");
 
-const app = express();
-app.use(express.json());
+// const app = express();
+// app.use(express.json());
 
-// Connect to the blockchain
-const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545"); // Hardhat local node
-const contractABI = require("./SupplyChainABI.json"); // ABI file (we will create this next)
-const contractAddress = deployedConfig.contractAddress; // Replace this after deployment
+// // Connect to the blockchain
+// const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545"); // Hardhat local node
+// const contractABI = require("./SupplyChainABI.json"); // ABI file (we will create this next)
+// const contractAddress = deployedConfig.contractAddress; // Replace this after deployment
 
-const signer = provider.getSigner(0); // Get the first Hardhat account
-const contract = new ethers.Contract(contractAddress, contractABI, signer);
+// const signer = provider.getSigner(0); // Get the first Hardhat account
+// const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-// API to add a product
-app.post("/add-product", async (req, res) => {
-    try {
-        const { name } = req.body;
-        const tx = await contract.addProduct(name);
-        await tx.wait();
-        res.json({ message: "Product added successfully!" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// // API to add a product
+// app.post("/add-product", async (req, res) => {
+//     try {
+//         const { name } = req.body;
+//         const tx = await contract.addProduct(name);
+//         await tx.wait();
+//         res.json({ message: "Product added successfully!" });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
 
-// API to fetch products
-app.get("/products", async (req, res) => {
-    try {
-        let productCount = await contract.productCount();
-        productCount = Number(productCount);
+// // API to fetch products
+// app.get("/products", async (req, res) => {
+//     try {
+//         let productCount = await contract.productCount();
+//         productCount = Number(productCount);
 
-        let products = [];
-        for (let i = 1; i <= productCount; i++) {
-            const product = await contract.products(i);
-            products.push({
-                id: Number(product.id),
-                name: product.name,
-                owner: product.owner,
-                delivered: product.delivered,
-            });
-        }
+//         let products = [];
+//         for (let i = 1; i <= productCount; i++) {
+//             const product = await contract.products(i);
+//             products.push({
+//                 id: Number(product.id),
+//                 name: product.name,
+//                 owner: product.owner,
+//                 delivered: product.delivered,
+//             });
+//         }
 
-        res.json(products);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+//         res.json(products);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
 
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-*/
+// // Start the server
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
 
 require("dotenv").config();
@@ -114,25 +114,25 @@ const contract = new ethers.Contract(contractAddress, contractABI, signer);
 app.post("/signup", async (req, res) => {
   try {
     const { username, password } = req.body;
-    if (!username || !password) return res.status(400).json({ error: "❌ Username and password required" });
+    if (!username || !password) return res.status(400).json({ error: "Username and password required" });
 
     const existingFarmer = await Farmer.findOne({ username });
-    if (existingFarmer) return res.status(400).json({ error: "❌ Username already exists. Try logging in." });
+    if (existingFarmer) return res.status(400).json({ error: "Username already exists. Try logging in." });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newFarmer = new Farmer({ username, password: hashedPassword });
     await newFarmer.save();
 
-    res.status(201).json({ message: "✅ Signup successful!" });
+    res.status(201).json({ message: "Signup successful!" });
   } catch (error) {
-    res.status(500).json({ error: "❌ Internal server error during signup" });
+    res.status(500).json({ error: "Internal server error during signup" });
   }
 });
 
 app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    if (!username || !password) return res.status(400).json({ error: "❌ Username and password required" });
+    if (!username || !password) return res.status(400).json({ error: "Username and password required" });
 
     const farmer = await Farmer.findOne({ username });
     if (!farmer) return res.status(400).json({ error: "❌ User not found." });
@@ -150,17 +150,17 @@ app.post("/login", async (req, res) => {
 app.post("/farmer/request", async (req, res) => {
   try {
     const { username, fruitType, landArea } = req.body;
-    if (!username || !fruitType || !landArea) return res.status(400).json({ error: "❌ All fields required" });
+    if (!username || !fruitType || !landArea) return res.status(400).json({ error: "All fields required" });
 
     const farmerExists = await Farmer.findOne({ username });
-    if (!farmerExists) return res.status(400).json({ error: "❌ User not found." });
+    if (!farmerExists) return res.status(400).json({ error: "User not found." });
 
     const newRequest = new Request({ username, fruitType, landArea, status: "pending" });
     await newRequest.save();
 
     res.json({ message: "✅ Request submitted.", request: newRequest });
   } catch (error) {
-    res.status(500).json({ error: "❌ Server error while submitting request" });
+    res.status(500).json({ error: "Server error while submitting request" });
   }
 });
 
@@ -202,7 +202,7 @@ app.get("/products", async (req, res) => {
 app.post("/approve-request", async (req, res) => {
   try {
     const { requestId, quantity } = req.body;
-    if (!requestId || !quantity) return res.status(400).json({ error: "❌ Request ID and quantity required" });
+    if (!requestId || !quantity) return res.status(400).json({ error: "Request ID and quantity required" });
 
     const updatedRequest = await Request.findByIdAndUpdate(
       requestId,
@@ -214,7 +214,7 @@ app.post("/approve-request", async (req, res) => {
 
     res.json({ message: "✅ Request approved successfully", request: updatedRequest });
   } catch (error) {
-    res.status(500).json({ error: "❌ Server error while approving request" });
+    res.status(500).json({ error: "Server error while approving request" });
   }
 });
 
@@ -224,11 +224,11 @@ app.get("/pending-requests", async (req, res) => {
     const requests = await Request.find({ status: "pending" });
     res.json(requests.length ? requests : []);
   } catch (error) {
-    res.status(500).json({ error: "❌ Server error while fetching requests" });
+    res.status(500).json({ error: "Server error while fetching requests" });
   }
 });
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
