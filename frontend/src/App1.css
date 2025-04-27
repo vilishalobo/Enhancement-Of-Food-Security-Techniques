@@ -8,7 +8,7 @@ body {
   .App {
     text-align: center;
     padding: 20px;
-    
+    overflow:auto;
     position: relative;
     min-height: 100vh; /* Ensures it covers the full height of the viewport */
     background: url('https://livelaughlovewithme.com/wp-content/uploads/2023/11/fruits-list.jpg') no-repeat center top;
@@ -43,7 +43,7 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
-    width: 300px;
+    width: 250px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   

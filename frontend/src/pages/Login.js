@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import "./LandingPage.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -34,6 +35,7 @@ const Login = () => {
   };
 
   return (
+    <div className="Login">
     <div>
       <h2>Farmer Login</h2>
       <input 
@@ -48,8 +50,9 @@ const Login = () => {
         value={password} 
         onChange={(e) => setPassword(e.target.value)} 
       />
-      <button onClick={handleLogin}>Login</button>
+      <button1 onClick={handleLogin}>Login</button1>
       <p>New user? <Link to="/signup">Signup</Link></p>
+    </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./LandingPage.css";
 
 const SubmitRequest = () => {
   const [fruitType, setFruitType] = useState("");
@@ -67,7 +68,7 @@ const SubmitRequest = () => {
   
 
   return (
-    <div>
+    <div classname="SubmitRequest">
       <h2>Submit Request</h2>
       <p>Logged in as: <strong>{username}</strong></p>
 

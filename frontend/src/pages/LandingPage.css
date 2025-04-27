@@ -1,0 +1,591 @@
+@import url('https://fonts.googleapis.com/css2?family=Blacker+Text&display=swap');
+
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Cinzel', serif;
+    background-color: #111; 
+    color: white;
+}
+
+
+/* Container for the Landing Page */
+.landing-page {
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+}
+
+/* Floating Images */
+.floating-images {
+    position: absolute; /* Position absolute to allow free placement */
+    left: 9px; /* Adjust as needed for horizontal positioning */
+    top: 10%; /* Adjust as needed for vertical positioning */
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 10px; /* Space between images */
+    padding: 1px; /* Optional padding around the grid */
+}
+
+.floating-image {
+    width: 300px; /* Increased width for larger images */
+    height: 200px; /* Increased height for larger images */
+    object-fit: cover; /* Cover the area without distortion */
+    animation: move 7s linear infinite; /* Continuous movement */
+}
+
+/* Keyframes for continuous movement */
+@keyframes move {
+    0% {
+        transform: translateY(0); /* Start position */
+    }
+    50% {
+        transform: translateY(-20px); /* Move up */
+    }
+    100% {
+        transform: translateY(0); /* Return to start */
+    }
+}
+
+/* Animation for odd and even columns */
+.floating-image:nth-child(odd) {
+    animation: moveUp 5s linear infinite; /* Move up animation for odd columns */
+}
+
+.floating-image:nth-child(even) {
+    animation: moveDown 5s linear infinite; /* Move down animation for even columns */
+}
+
+/* Keyframes for odd and even animations */
+@keyframes moveUp {
+    0% {
+        transform: translateY(0); /* Start position */
+    }
+    50% {
+        transform: translateY(-20px); /* Move up */
+    }
+    100% {
+        transform: translateY(0); /* Return to start */
+    }
+}
+
+@keyframes moveDown {
+    0% {
+        transform: translateY(0); /* Start position */
+    }
+    50% {
+        transform: translateY(20px); /* Move down */
+    }
+    100% {
+        transform: translateY(0); /* Return to start */
+    }
+}
+
+/* Web Name Styling */
+.WebName {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Cinzel', serif; 
+    letter-spacing: 2px;
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    margin: 0;
+    padding: 0.5rem 1rem;
+}
+
+.WebName span {
+    display: inline-block;
+    padding: 0 5px;
+}
+
+.WebName .text-black {
+    color: white;
+}
+
+.WebName .text-red-600 {
+    color: #ff0015;
+}
+.wallet-info{
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-align: center; 
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1000; /* High value to ensure it's on top */
+    transform: translateZ(0); /* Forces hardware acceleration */
+    margin-top: 2rem; 
+    margin-bottom: 3rem;
+
+}
+/* Form Wrapper */
+.form-wrapper {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+    text-align: center;
+    width: 400px;
+    margin: 0 auto; /* Center the form wrapper */
+    position: relative; /* Position relative to allow absolute positioning of children */
+    z-index: 1; /* Ensure it appears above floating images */
+}
+.form {
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto; /* Center the form wrapper */
+    position: relative; /* Position relative to allow absolute positioning of children */
+    z-index: 1; /* Ensure it appears above floating images */
+}
+/* Content Row for Left and Right Co1tainers */
+.content-row {
+    display: flex;
+    justify-content: space-between; /* Space between left and right containers */
+    width: 100%; /* Full width */
+    max-width: 1200px; /* Optional max width */
+    margin: 2rem auto; /* Center the row */
+    align-items: stretch; /* Ensure both containers stretch to the same height */
+}
+/* Add this to your existing CSS */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* 50% opacity black */
+    z-index: 1; /* Below content but above background */
+    transition: opacity 0.3s ease;
+}
+
+/* Update these existing classes */
+.landing-page {
+    /* ... keep existing properties ... */
+    z-index: 2; /* Higher than overlay */
+}
+
+.form-wrapper {
+    /* ... keep existing properties ... */
+    z-index: 3; /* Higher than landing-page */
+}
+
+.floating-images {
+    /* ... keep existing properties ... */
+    z-index: 0; /* Lowest layer */
+}
+
+.content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%; /* Adjust width to fit side by side */
+    margin-top: auto; /* Push content to vertical center */
+    margin-bottom: auto; /* Push content to vertical center */
+    z-index: 2;
+    flex: 1; /* Allow containers to grow equally */
+    height: 300px; /* Set a fixed height to ensure equal size */
+}
+
+.center-container{   
+    background-color: black;
+    color: white;
+    padding: 20px 200px;
+    margin: 8px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    display: block; /* Ensure it takes full width */
+    margin: 20px auto; /* Center the button horizontally */
+    animation: glow 1.5s ease-in-out infinite alternate;
+    background: #fc0404e5;
+    color: white;
+    box-shadow: 0 0 10px rgba(91, 90, 90, 0.5);
+}
+.left-container {
+    margin-right: 2%; /* Space between left and right containers */
+}
+
+.right-container {
+    margin-left: 2%; /* Space between left and right containers */
+}
+
+.white-text {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+
+.spacer {
+    height: 10px;
+}
+
+button {
+    width: 50%;
+    padding: 14px 0;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none; /* Removed border color */
+    border-radius: 34px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.bg-red-600 {
+    background-color: #ff0000;
+    color: white;
+}
+
+.bg-red-600:hover {
+    background-color: #ff0000;
+}
+
+.form-group{
+    width: 300px; /* Full width of its container */
+    max-width: 200px; /* Optional: Set a max-width for very large screens */
+    padding: 16px 0; /* Increased vertical padding */
+    font-size: 1.1rem; /* Slightly larger font */
+    font-weight: bold;
+    font-family: 'Blacker Text', sans-serif;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    display: block; /* Ensure it takes full width */
+    margin: 0 auto; /* Center the button horizontally */
+    animation: glow 1.5s ease-in-out infinite alternate;
+    background: #000000;
+    color: white;
+    box-shadow: 0 0 10px rgba(91, 90, 90, 0.5);
+}
+.form-group label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+}
+
+select {
+    width: 80%;
+    padding: 5px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: #222;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+select:hover {
+    background: #333;
+}
+
+select:focus {
+    background: #444;
+    transform: scale(1.05);
+
+}.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.auth-button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    margin: 8px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    display: block; /* Ensure it takes full width */
+    margin: 20px auto; /* Center the button horizontally */
+    animation: glow 1.5s ease-in-out infinite alternate;
+    background: #000000e5;
+    color: white;
+    box-shadow: 0 0 10px rgba(91, 90, 90, 0.5);
+
+}
+
+.auth-button:hover {
+    background-color: #222;
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.switch-text {
+    margin-top: 8px;
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+
+  
+/* Responsive Design */
+@media (max-width: 768px) {
+    .WebName {
+        font-size: 2.5rem;
+    }
+
+    .form-wrapper {
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .floating-image {
+        width: 100px; /* Smaller size for mobile */
+        height: 100px; /* Smaller size for mobile */
+    }
+
+    .white-text {
+        font-size: 1.2rem; /* Smaller font size for mobile */
+    }
+    button {
+        max-width: 100%; /* Full width on mobile */
+        padding: 14px 0; /* Slightly smaller padding */
+        font-size: 1rem; /* Smaller font */
+    }
+
+    .bg-white {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+    .content-row {
+        flex-direction: column; /* Stack containers on mobile */
+        gap: 1rem; /* Space between stacked containers */
+    }
+
+    .left-container, .right-container {
+        margin: 0; /* Remove margins for stacked layout */
+        width: 100%; /* Full width for mobile */
+    }
+}
+@keyframes glow {
+    from {
+      box-shadow: 0 0 10px;
+    }
+    to {
+      box-shadow: 0 0 20px;
+    }
+  }
+    
+  @keyframes ripple {
+    0% {
+      transform: scale(0, 0);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(20, 20);
+      opacity: 0;
+    }
+  }
+
+  .IndustryDashboard {
+    display: flex; /* Use flexbox for layout */
+    justify-content:left; /* Center the content horizontally */
+    align-items: left; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+    overflow:scroll; 
+}
+.RetailerDashboard {
+    display: flex; /* Use flexbox for layout */
+    justify-content:left; /* Center the content horizontally */
+    align-items: left; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+    overflow:scroll; 
+}
+.CustomerDashboard {
+    display: flex; /* Use flexbox for layout */
+    justify-content:left; /* Center the content horizontally */
+    align-items: left; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+    overflow:scroll; 
+}
+.Login {
+    display: flex; /* Use flexbox for layout */
+    justify-content:left; /* Center the content horizontally */
+    align-items: left; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+    overflow:scroll; 
+}
+.AdminDashboard {
+    display: flex; /* Use flexbox for layout */
+    justify-content:left; /* Center the content horizontally */
+    align-items: left; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+    overflow:scroll; 
+}
+.Prediction {
+    display: flex; /* Use flexbox for layout */
+    justify-content:left; /* Center the content horizontally */
+    align-items: left; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+    overflow:scroll; 
+}
+
+.Signup {
+    display: flex; /* Use flexbox for layout */
+    justify-content:left; /* Center the content horizontally */
+    align-items: left; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+    overflow:scroll; 
+}
+
+.SubmitRequest{
+    display: flex; /* Use flexbox for layout */
+    justify-content:left; /* Center the content horizontally */
+    align-items: left; /* Center vertically */
+    position: relative; /* Position relative for absolute children */
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    flex-direction: column; /* Stack children vertically */
+    padding-top: 2rem;
+    z-index: 3;
+    background-color: #111; 
+    overflow:scroll; 
+}
+
+h1, h2, h3 {
+    color: #ff0000; /* Red color for headings */
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="password"],
+
+
+button1 {
+    background-color: #333; /* Dark gray background for inputs and buttons */
+    color: #fff; /* White text color */
+    border: 1px solid #555; /* Slightly lighter border */
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px; /* Rounded corners */
+    width: 30%; /* Full width */
+}
+
+button1 {
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+button1:hover {
+    background-color: #555; /* Lighter gray on hover */
+}
+
+p {
+    margin: 10px 0; /* Spacing between paragraphs */
+}
+
+hr {
+    border: 1px solid #555; /* Divider line color */
+}
+
+ul {
+    list-style-type: none; /* Remove bullet points from list */
+    padding: 0; /* Remove padding */
+}
+
+li {
+    background-color: #222; /* Darker background for list items */
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px; /* Rounded corners for list items */
+}
+
+button2 {
+    color: #fff; /* White text color */
+    border: 1px solid #555; /* Slightly lighter border */
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px; /* Rounded corners */
+    width: 90%; /* Full width */
+}
+
+button2 {
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+button2:hover {
+    background-color: #555; /* Lighter gray on hover */
+}
+.bg-red1-600 {
+    background-color: #ff0000;
+    color: white;
+
+}
+
+.bg-red1-600:hover {
+    background-color: #ff0000;
+}

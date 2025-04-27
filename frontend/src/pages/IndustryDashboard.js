@@ -206,6 +206,7 @@ const IndustryDashboard = () => {
   }
 
   return (
+  <div className="IndustryDashboard">
     <div>
       <h1>Shipment Management</h1>
 
@@ -217,7 +218,7 @@ const IndustryDashboard = () => {
           value={receiverAddress}
           onChange={(e) => setReceiverAddress(e.target.value)}
         />
-        <button onClick={createShipment}>Create Shipment</button>
+        <button1 onClick={createShipment}>Create Shipment</button1>
       </div>
 
       <div>
@@ -268,7 +269,7 @@ const IndustryDashboard = () => {
         />
         </p>
 
-        <button onClick={addProductToShipment}>Add Product</button>
+        <button1 onClick={addProductToShipment}>Add Product</button1>
       </div>
 
       <div>
@@ -279,7 +280,7 @@ const IndustryDashboard = () => {
           value={shipmentId}
           onChange={(e) => setShipmentId(e.target.value)}
         />
-        <button onClick={fetchShipment}>Fetch Shipment</button>
+        <button1 onClick={fetchShipment}>Fetch Shipment</button1>
       </div>
 
       {shipmentDetails && (
@@ -316,9 +317,10 @@ const IndustryDashboard = () => {
 
       <div>
         <h2>Manage Shipment</h2>
-        <button onClick={startShipment}>Start Shipment</button>
+        <button1 onClick={startShipment}>Start Shipment</button1>
       </div>
       {statusMessage && <p>{statusMessage}</p>}
+    </div>
     </div>
   );
 };

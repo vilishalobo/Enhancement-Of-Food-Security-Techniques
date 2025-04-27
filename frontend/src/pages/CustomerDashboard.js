@@ -84,6 +84,7 @@ const CustomerDashboard = () => {
     }
 
     return (
+      <div className="CustomerDashboard">
       <div>
         <h2>Fetch Shipment</h2>
         <input
@@ -92,7 +93,7 @@ const CustomerDashboard = () => {
           value={shipmentId}
           onChange={(e) => setShipmentId(e.target.value)}
         />
-        <button onClick={fetchShipment}>Fetch Shipment</button>
+        <button1 onClick={fetchShipment}>Fetch Shipment</button1>
   
         {statusMessage && <p>{statusMessage}</p>}
   
@@ -127,6 +128,7 @@ const CustomerDashboard = () => {
             )}
           </div>
         )}
+      </div>
       </div>
     );
   };

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ethers } from "ethers";
 import SupplyChainABI from "../SupplyChainABI.json";
 import contractData from "../deployedAddress.json";
+import "./LandingPage.css";
 
 const RetailerDashboard = () => {
   const [shipmentId, setShipmentId] = useState("");
@@ -90,6 +91,8 @@ const RetailerDashboard = () => {
   }
 
   return (
+
+    <div className="RetailerDashboard">
     <div>
       <h2>Fetch Shipment</h2>
       <input
@@ -98,8 +101,8 @@ const RetailerDashboard = () => {
         value={shipmentId}
         onChange={(e) => setShipmentId(e.target.value)}
       />
-      <button onClick={fetchShipment}>Fetch Shipment</button>
-      <button onClick={completeShipment}>Complete Shipment</button>
+      <button1 onClick={fetchShipment}>Fetch Shipment</button1>
+      <button1 onClick={completeShipment}>Complete Shipment</button1>
 
       {statusMessage && <p>{statusMessage}</p>}
 
@@ -134,6 +137,7 @@ const RetailerDashboard = () => {
           )}
         </div>
       )}
+    </div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
+import "./LandingPage.css";
 
 function AdminDashboard() {
   const [requests, setRequests] = useState([]);
@@ -34,7 +35,7 @@ function AdminDashboard() {
   async function approveRequest(requestId) {
     const quantity = quantities[requestId];
     if (!quantity) {
-      alert("❌ Please enter a quantity before approving!");
+      alert(" Please enter a quantity before approving!");
       return;
     }
 
@@ -49,8 +50,8 @@ function AdminDashboard() {
 
   return (
     
-    <div style={{ padding: "10px" }}>
-      <h1 style={{ color: "Black" }}>Admin Dashboard</h1>
+    <div className="AdminDashboard" style={{ padding: "10px" }}>
+      <h1> Admin Dashboard</h1>
       <h3>Pending Requests</h3>
 
       {loading ? (

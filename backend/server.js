@@ -102,13 +102,19 @@ const requestSchema = new mongoose.Schema({
 const Request = mongoose.model("Request", requestSchema);
 
 // ✅ Blockchain Setup
-const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545"); // Hardhat local node
-const contractABI = require("./SupplyChainABI.json"); 
-const deployedAddressPath = path.join(__dirname, "deployedAddress.json");
-const { contractAddress } = JSON.parse(fs.readFileSync(deployedAddressPath, "utf-8"));
-const signer = provider.getSigner(0);
-console.log("Contract address:", contractAddress);
-const contract = new ethers.Contract(contractAddress, contractABI, signer);
+let contract;
+try {
+  const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545"); // Hardhat local node
+  const contractABI = require("./SupplyChainABI.json"); 
+  const deployedAddressPath = path.join(__dirname, "deployedAddress.json");
+  const { contractAddress } = JSON.parse(fs.readFileSync(deployedAddressPath, "utf-8"));
+  const signer = provider.getSigner(0);
+  console.log("Contract address:", contractAddress);
+  contract = new ethers.Contract(contractAddress, contractABI, signer);
+} catch (error) {
+  console.warn("⚠️ Warning: Could not connect to blockchain. Some features may be limited.");
+  contract = null;
+}
 
 // ✅ Authentication Routes
 app.post("/signup", async (req, res) => {
@@ -225,6 +231,34 @@ app.get("/pending-requests", async (req, res) => {
     res.json(requests.length ? requests : []);
   } catch (error) {
     res.status(500).json({ error: "Server error while fetching requests" });
+  }
+});
+
+// ✅ Get Predictions
+app.get("/predictions", async (req, res) => {
+  try {
+    // Sample prediction data - replace with actual ML model predictions
+    const predictions = {
+      apple: [
+        { year: 2024, value: 100 },
+        { year: 2025, value: 110 },
+        { year: 2026, value: 120 }
+      ],
+      orange: [
+        { year: 2024, value: 80 },
+        { year: 2025, value: 85 },
+        { year: 2026, value: 90 }
+      ],
+      mango: [
+        { year: 2024, value: 60 },
+        { year: 2025, value: 65 },
+        { year: 2026, value: 70 }
+      ]
+    };
+    
+    res.json({ predictions });
+  } catch (error) {
+    res.status(500).json({ error: "Server error while fetching predictions" });
   }
 });
 
