@@ -4,7 +4,12 @@ import "./LandingPage.css";
 
 const SubmitRequest = () => {
   const [fruitType, setFruitType] = useState("");
+<<<<<<< HEAD
   const [landArea, setLandArea] = useState("");  
+=======
+  const [landArea, setLandArea] = useState("");  // ✅ Added landArea state
+  const [amount, setAmount] = useState("");
+>>>>>>> 2489ce3d2816a027352ececc096821a6911c6a34
   const [username, setUsername] = useState("");
   const [requests, setRequests] = useState([]);
 
@@ -35,12 +40,17 @@ const SubmitRequest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
+<<<<<<< HEAD
     if (!username || !fruitType || !landArea) {
       alert("Please enter fruit type and land area");
+=======
+    if (!username || !fruitType || !landArea || !amount) {
+      alert("❌ Please enter fruit type and land area");
+>>>>>>> 2489ce3d2816a027352ececc096821a6911c6a34
       return;
     }
   
-    const requestData = { username, fruitType, landArea };
+    const requestData = { username, fruitType, landArea, amount  };
     console.log("Submitting Request Data:", requestData); // ✅ Debugging line
   
     try {
@@ -58,6 +68,7 @@ const SubmitRequest = () => {
       alert(data.message);
       setFruitType(""); 
       setLandArea("");  
+      setAmount("");
       fetchRequests(username);
   
     } catch (error) {
@@ -85,6 +96,12 @@ const SubmitRequest = () => {
   value={landArea}
   onChange={(e) => setLandArea(Number(e.target.value))} // ✅ Convert to number
 />
+<input
+        type="number"
+        placeholder="Amount that can be grown (in kgs)"
+        value={amount}
+        onChange={(e) => setAmount(Number(e.target.value))}
+      />
 
 
       <button onClick={handleSubmit}>Submit</button>
@@ -95,6 +112,7 @@ const SubmitRequest = () => {
           <tr>
             <th>Fruit Type</th>
             <th>Land Area</th>
+            <th>Amount (in kgs)</th>
             <th>Approved Quantity</th>
           </tr>
         </thead>
@@ -103,7 +121,7 @@ const SubmitRequest = () => {
             <tr key={request._id}>
               <td>{request.fruitType}</td>
               <td>{request.landArea ? `${request.landArea} acres` : "N/A"}</td>
-
+              <td>{request.amount ? `${request.amount} kg` : "N/A"}</td>
               <td>{request.quantity || "Pending"}</td>
             </tr>
           ))}

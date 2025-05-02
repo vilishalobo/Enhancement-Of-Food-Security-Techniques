@@ -53,7 +53,6 @@
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
-
 require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
@@ -96,10 +95,12 @@ const requestSchema = new mongoose.Schema({
   username: { type: String, required: true },
   fruitType: { type: String, required: true },
   landArea: { type: Number, required: true },
+  amount: { type: Number, required: true }, 
   quantity: { type: Number, default: 0 },
   status: { type: String, default: "pending" }
 });
 const Request = mongoose.model("Request", requestSchema);
+
 
 // ✅ Blockchain Setup
 let contract;
@@ -152,7 +153,21 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ✅ Farmer Request Handling
+// ✅ Get Farmer's Requests
+app.get("/farmer/requests", async (req, res) => {
+  try {
+    const { username } = req.query;
+    if (!username) return res.status(400).json({ error: "❌ Username is required" });
+
+    const requests = await Request.find({ username });
+    res.json(requests);  // Return the fetched requests
+  } catch (error) {
+    res.status(500).json({ error: "❌ Server error while fetching requests" });
+  }
+});
+
+
+// ✅ Submit new request
 app.post("/farmer/request", async (req, res) => {
   try {
     const { username, fruitType, landArea } = req.body;
@@ -208,7 +223,7 @@ app.get("/products", async (req, res) => {
 app.post("/approve-request", async (req, res) => {
   try {
     const { requestId, quantity } = req.body;
-    if (!requestId || !quantity) return res.status(400).json({ error: "Request ID and quantity required" });
+    if (!requestId || !quantity) return res.status(400).json({ error: "❌ Request ID and quantity required" });
 
     const updatedRequest = await Request.findByIdAndUpdate(
       requestId,
@@ -220,9 +235,11 @@ app.post("/approve-request", async (req, res) => {
 
     res.json({ message: "✅ Request approved successfully", request: updatedRequest });
   } catch (error) {
-    res.status(500).json({ error: "Server error while approving request" });
+    res.status(500).json({ error: "❌ Server error while approving request" });
   }
 });
+
+
 
 // ✅ Get All Pending Requests
 app.get("/pending-requests", async (req, res) => {
