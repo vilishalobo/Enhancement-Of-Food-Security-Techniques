@@ -4,12 +4,8 @@ import "./LandingPage.css";
 
 const SubmitRequest = () => {
   const [fruitType, setFruitType] = useState("");
-<<<<<<< HEAD
   const [landArea, setLandArea] = useState("");  
-=======
-  const [landArea, setLandArea] = useState("");  // ✅ Added landArea state
   const [amount, setAmount] = useState("");
->>>>>>> 2489ce3d2816a027352ececc096821a6911c6a34
   const [username, setUsername] = useState("");
   const [requests, setRequests] = useState([]);
 
@@ -40,16 +36,10 @@ const SubmitRequest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-<<<<<<< HEAD
-    if (!username || !fruitType || !landArea) {
-      alert("Please enter fruit type and land area");
-=======
     if (!username || !fruitType || !landArea || !amount) {
-      alert("❌ Please enter fruit type and land area");
->>>>>>> 2489ce3d2816a027352ececc096821a6911c6a34
+      alert("❌ Please enter fruit type, land area, and amount");
       return;
     }
-  
     const requestData = { username, fruitType, landArea, amount  };
     console.log("Submitting Request Data:", requestData); // ✅ Debugging line
   
@@ -79,7 +69,7 @@ const SubmitRequest = () => {
   
 
   return (
-    <div classname="SubmitRequest">
+    <div className="SubmitRequest">
       <h2>Submit Request</h2>
       <p>Logged in as: <strong>{username}</strong></p>
 

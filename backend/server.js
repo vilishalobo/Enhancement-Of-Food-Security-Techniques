@@ -170,13 +170,13 @@ app.get("/farmer/requests", async (req, res) => {
 // ✅ Submit new request
 app.post("/farmer/request", async (req, res) => {
   try {
-    const { username, fruitType, landArea } = req.body;
-    if (!username || !fruitType || !landArea) return res.status(400).json({ error: "All fields required" });
+    const { username, fruitType, landArea, amount } = req.body;
+    if (!username || !fruitType || !landArea || !amount) return res.status(400).json({ error: "All fields required" });
 
     const farmerExists = await Farmer.findOne({ username });
     if (!farmerExists) return res.status(400).json({ error: "User not found." });
 
-    const newRequest = new Request({ username, fruitType, landArea, status: "pending" });
+    const newRequest = new Request({ username, fruitType, landArea, amount, status: "pending" });
     await newRequest.save();
 
     res.json({ message: "✅ Request submitted.", request: newRequest });
