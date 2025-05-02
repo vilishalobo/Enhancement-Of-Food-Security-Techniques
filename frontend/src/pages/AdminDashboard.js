@@ -102,14 +102,8 @@ function AdminDashboard() {
         <p>No pending requests</p>
       )}
 
-<<<<<<< HEAD
-      {/* Button to go to Prediction page */}
-      <button 
-        onClick={() => navigate("/prediction")} // Redirect to Prediction.js
-=======
       <button
         onClick={() => navigate("/prediction")}
->>>>>>> 109a6cc8133a50386e1e969d88075851964524b6
         style={{
           marginTop: "20px",
           padding: "10px",

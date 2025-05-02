@@ -29,7 +29,8 @@ const FloatingImages = () => {
         <img 
           key={index} 
           src={src} 
-          alt={`Floating Image ${index + 1}`} // Corrected the alt attribute
+          alt=""
+          //alt={`Floating Image ${index + 1}`} // Corrected the alt attribute
           className="floating-image"
         />
       ))}
