@@ -4,7 +4,7 @@ import "./LandingPage.css";
 
 const SubmitRequest = () => {
   const [fruitType, setFruitType] = useState("");
-  const [landArea, setLandArea] = useState("");  // ✅ Added landArea state
+  const [landArea, setLandArea] = useState("");  
   const [username, setUsername] = useState("");
   const [requests, setRequests] = useState([]);
 
@@ -28,7 +28,7 @@ const SubmitRequest = () => {
       if (!response.ok) throw new Error("Failed to fetch requests");
       setRequests(data);
     } catch (error) {
-      console.error("❌ Error fetching requests:", error);
+      console.error("Error fetching requests:", error);
     }
   };
 
@@ -36,7 +36,7 @@ const SubmitRequest = () => {
     e.preventDefault();
   
     if (!username || !fruitType || !landArea) {
-      alert("❌ Please enter fruit type and land area");
+      alert("Please enter fruit type and land area");
       return;
     }
   
@@ -61,7 +61,7 @@ const SubmitRequest = () => {
       fetchRequests(username);
   
     } catch (error) {
-      console.error("❌ Error submitting request:", error);
+      console.error("Error submitting request:", error);
       alert("❌ Error submitting request. Please try again.");
     }
   };

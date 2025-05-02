@@ -9,7 +9,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     if (!username || !password) {
-      alert("❌ Enter valid credentials!");
+      alert("Enter valid credentials!");
       return;
     }
 
@@ -23,10 +23,10 @@ const Login = () => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem("username", username); // Store username in localStorage
-        alert("✅ Login successful! Redirecting...");
+        alert("Login successful! Redirecting...");
         navigate("/submit-request");  // Redirect to next page
       } else {
-        alert(data.error || "❌ Login failed!");
+        alert(data.error || "Login failed!");
       }
     } catch (error) {
       console.error("Login error:", error);

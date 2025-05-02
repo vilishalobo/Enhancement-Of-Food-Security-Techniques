@@ -16,7 +16,7 @@ function AdminDashboard() {
         console.log("Fetched Requests:", response.data);
         setRequests(response.data);
       } catch (error) {
-        console.error("❌ Error fetching requests:", error);
+        console.error("Error fetching requests:", error);
       } finally {
         setLoading(false);
       }
@@ -44,7 +44,7 @@ function AdminDashboard() {
       alert("✅ Request approved!");
       setRequests(requests.filter(req => req._id !== requestId));
     } catch (error) {
-      console.error("❌ Error approving request:", error);
+      console.error("Error approving request:", error);
     }
   }
 
@@ -92,9 +92,9 @@ function AdminDashboard() {
         <p>No pending requests</p>
       )}
 
-      {/* ✅ Button to go to Prediction page */}
+      {/* Button to go to Prediction page */}
       <button 
-        onClick={() => navigate("/prediction")} // ✅ Redirect to Prediction.js
+        onClick={() => navigate("/prediction")} // Redirect to Prediction.js
         style={{
           marginTop: "20px",
           padding: "10px",

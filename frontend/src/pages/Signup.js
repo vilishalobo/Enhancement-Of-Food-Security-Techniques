@@ -23,10 +23,10 @@ const Signup = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("✅ Signup successful! Redirecting to login...");
+        alert("Signup successful! Redirecting to login...");
         navigate("/login");  // Redirect to Login page
       } else {
-        alert(data.error || "❌ Signup failed!");
+        alert(data.error || "Signup failed!");
       }
     } catch (error) {
       console.error("Signup error:", error);
