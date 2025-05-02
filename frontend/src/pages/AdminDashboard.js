@@ -73,6 +73,7 @@ function AdminDashboard() {
                 <td>{req.username}</td>
                 <td>{req.fruitType}</td>
                 <td>{req.landArea ? `${req.landArea} acres` : "N/A"}</td>
+                <td>{req.amount ? `${req.amount} Kgs` : "Not predicted yet"}</td>
                 <td>
                   <input
                     type="number"
