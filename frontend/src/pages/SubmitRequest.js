@@ -70,7 +70,7 @@ const SubmitRequest = () => {
   
 
   return (
-    <div classname="SubmitRequest">
+    <div className="SubmitRequest">
       <h2>Submit Request</h2>
       <p>Logged in as: <strong>{username}</strong></p>
 

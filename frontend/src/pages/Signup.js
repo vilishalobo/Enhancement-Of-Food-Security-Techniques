@@ -75,7 +75,8 @@ const Signup = () => {
               border: 'none',
               backgroundColor: '#222',
               color: 'white',
-              fontSize: '1rem'
+              fontSize: '1rem',
+              width:'370px'
             }}
           />
           <input 
@@ -89,7 +90,8 @@ const Signup = () => {
               border: 'none',
               backgroundColor: '#222',
               color: 'white',
-              fontSize: '1rem'
+              fontSize: '1rem',
+              width:'370px'
             }}
           />
           <button 
